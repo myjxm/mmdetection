@@ -7,13 +7,11 @@ crop_size = (512, 512)
 train_pipeline = [
     dict(type='LoadImageFromFile'),
     dict(type='LoadAnnotations'),
-    dict(type='Resize', img_scale=(2048, 512), ratio_range=(0.5, 2.0)),  #img_scale是图片的大小
-    dict(type='RandomCrop', crop_size=crop_size, cat_max_ratio=0.75),  #cat_max_ratio指单个类别可以在裁剪后的图片中占有的比率
-    dict(type='RandomFlip', prob=0.5),   ##随机反转，看随机数是否小于Prob,小于就翻，默认 水平翻转
-    dict(type='RandomRotate',prob=0.5,degree=5),  ##随机旋转
-    dict(type='PhotoMetricDistortion'), ##做的光度畸变
-    dict(type='Normalize', **img_norm_cfg),  ##做的图像归一化
-    dict(type='Pad', size=crop_size, pad_val=0, seg_pad_val=255),
+    dict(type='Resize', img_scale=(1333, 800), keep_ratio=True),
+    dict(type='RandomFlip', flip_ratio=0.5),
+    dict(type='Normalize', **img_norm_cfg),
+    dict(type='Pad', size_divisor=32),
+    dict(type='SegRescale', scale_factor=1 / 4),
     dict(type='DefaultFormatBundle'),
     dict(type='Collect', keys=['img', 'gt_semantic_seg']),
 ]
